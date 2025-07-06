@@ -25,11 +25,22 @@ prompt=ChatPromptTemplate([("system","You are the best {expert} and you give bri
                                   ("human","topic is {topic},talk about {inp}")])
 mod=prompt|model
 
+# Old messages gets printed
+
+for msgs in st.session_state.chat_history:
+    if "human" in msgs:
+        with st.chat_message("user"):
+            st.write(msgs[1])
+    else:
+        with st.chat_message("ai"):
+            st.write(msgs[1])
+
+
 if inp:
     with st.chat_message("user"):
         st.session_state.chat_history.append(("human",inp))
         st.write(str(inp))
-    with st.chat_message("AI"):
+    with st.chat_message("ai"):
         result=mod.invoke({"expert":expert,"topic":topic,"inp":inp,"chat_history":st.session_state.chat_history})
         st.session_state.chat_history.append(("ai",result.content))
         st.write(result.content)
